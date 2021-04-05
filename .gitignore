@@ -129,5 +129,5 @@ dmypy.json
 .pyre/
 
 # Documentation
-.docx
-.vsdx
+*.docx
+*.vsdx
