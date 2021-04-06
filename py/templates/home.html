@@ -9,7 +9,7 @@
 <body>
     <h1>Metadata Search</h1>
     <input id='search' type="text" onkeyup="search()" placeholder="Search Here..."/>
-    <h2>Results</h2>
+    <br/><br/>
     <div id='results'></div>
 </body>
 <script>
@@ -25,8 +25,8 @@
             var data = JSON.parse(this.response)
             for (var key in data) {
                 var info = data[key];
-                var filename = info['filename']
-                var link = "info?file="+info['path']
+                var filename = info['filename'];
+                var link = "info?file="+info['path']+"&term="+searchterm;
                 html += "<span class='result'><a href='"+link+"'>"+filename+"</a></span><br/>";
                 html += info['count']+" matches<br/>";
                 html += info['path']+"<br/>";
@@ -38,20 +38,35 @@
     }
 
     function search(){
-        document.getElementById('results').innerHTML = 'Searching...'
-        clearTimeout(timer);
-        timer=setTimeout(function(){updatesearch()},500);
+        var searchterm = document.getElementById('search').value;
+        if(searchterm.length > 2)
+        {
+            document.getElementById('results').innerHTML = 'Searching...'
+            clearTimeout(timer);
+            timer=setTimeout(function(){updatesearch()},500);
+        }
+        else
+        {
+            document.getElementById('results').innerHTML = ''
+        }
+        
     }
+
+    setTimeout(function(){updatesearch()},500);
     
 </script>
 
 <style>
     body{
         font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        margin: 80px;
     }
     .result{
-        font-weight: bold;
         font-size:20px;
+    }
+    input
+    {
+        font-size: 18px;
     }
 </style>
 </html>

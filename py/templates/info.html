@@ -7,6 +7,44 @@
     <title>File Info</title>
 </head>
 <body>
-    {{file_path}}
+    <h1>Results for "{{search_term}}" in {{file_name}}</h1>
+    <p class="resulttext">{{file_path}}</p>
+    <p id='highlight' class='code'>{{file_contents}}</p>
 </body>
+
+<script>
+    var highlighted = document.getElementById('highlight').innerHTML;
+    const urlParams = new URLSearchParams(window.location.search);
+    var searchMask = urlParams.get('term');
+    var regEx = new RegExp(searchMask, "ig");
+    var regExnewline = new RegExp('\n', "g");
+    highlighted = highlighted.replace(regEx, function (match) {return "<mark>" + match + "</mark>"})
+    var lineNum = 1;
+    var tab = "&nbsp;&nbsp;&nbsp;&nbsp;";
+    highlighted = lineNum + "&nbsp;" + tab + highlighted;
+    highlighted = highlighted.replace(regExnewline, function (match) {
+        lineNum++;
+        return "</br>" + lineNum + tab + match});
+    document.getElementById('highlight').innerHTML = highlighted;
+</script>
+
+<style>
+    body{
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        margin: 80px;
+    }
+    .code{
+        background-color: #eee;
+        font-family: monospace;
+        font-size: 16px;
+        padding:20px;
+        border 1px solid #gray;
+        border-radius:5px;
+    }
+    .resulttext
+    {
+        font-style: italic;
+        color: gray;
+    }
+</style>
 </html>
