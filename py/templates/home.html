@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Metadata Search</title>
+</head>
+<body>
+    <h1>Metadata Search</h1>
+    <input id='search' type="text" onkeyup="search()" placeholder="Search Here..."/>
+    <h2>Results</h2>
+    <div id='results'></div>
+</body>
+<script>
+    var timer;
+
+    function updatesearch(){
+        var html = ""
+        var searchterm = document.getElementById('search').value;
+        console.log('Searching for ' + searchterm);
+        var request = new XMLHttpRequest();
+        request.open('GET', 'http://127.0.0.1:5000/search/files/'+searchterm, true);
+        request.onload = function () {
+            var data = JSON.parse(this.response)
+            for (var key in data) {
+                var info = data[key];
+                var filename = info['filename']
+                var link = "info?file="+info['path']
+                html += "<span class='result'><a href='"+link+"'>"+filename+"</a></span><br/>";
+                html += info['count']+" matches<br/>";
+                html += info['path']+"<br/>";
+            }
+            document.getElementById('results').innerHTML = html
+        }
+        request.send();
+
+    }
+
+    function search(){
+        document.getElementById('results').innerHTML = 'Searching...'
+        clearTimeout(timer);
+        timer=setTimeout(function(){updatesearch()},500);
+    }
+    
+</script>
+
+<style>
+    body{
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    .result{
+        font-weight: bold;
+        font-size:20px;
+    }
+</style>
+</html>
